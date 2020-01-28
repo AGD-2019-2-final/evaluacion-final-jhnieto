@@ -25,4 +25,7 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
-
+-- r = FOREACH u GENERATE ToDate(birthday,'yyyy-MM-dd');
+-- x = FOREACH r GENERATE GetMonth(birthday);
+r = FOREACH u GENERATE SUBSTRING(birthday,5,7);
+STORE r INTO 'output';

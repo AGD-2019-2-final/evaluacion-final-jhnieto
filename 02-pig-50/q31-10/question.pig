@@ -20,3 +20,9 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+r = FOREACH u GENERATE ToDate(birthday,'yyyy-MM-dd') AS (date_time:DateTime);
+x = FOREACH r GENERATE GetYear(date_time);
+x = GROUP x BY $0;
+z = FOREACH x GENERATE $0, COUNT($1);
+x = FOREACH z GENERATE CONCAT((CHARARRAY)$0,',',(CHARARRAY)$1);
+STORE x INTO 'output';

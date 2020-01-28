@@ -28,4 +28,6 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
-
+r = FOREACH u GENERATE firstname, color;
+x = FILTER r BY color == 'blue' OR color == 'green';
+STORE x INTO 'output';

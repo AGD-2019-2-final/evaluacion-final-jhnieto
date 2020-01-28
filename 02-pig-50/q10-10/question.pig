@@ -26,3 +26,8 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+r = FOREACH u GENERATE $2, SIZE($2);
+x = ORDER r BY $1 DESC, $0; 
+x = FOREACH x GENERATE CONCAT($0,',',(CHARARRAY)$1);
+x = LIMIT x 5;
+STORE x INTO 'output';

@@ -14,3 +14,12 @@ fs -rm -f -r output;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+u = LOAD 'data.tsv' USING PigStorage('\t')
+    AS (f1:CHARARRAY,
+        f2:BAG{t: TUPLE(p:CHARARRAY)},
+        f3:MAP[]);
+r = ORDER u BY f1, f2, f3;
+z = FOREACH r GENERATE FLATTEN(f2), FLATTEN(f3);
+x = GROUP z BY ($0,$1);
+y = FOREACH x GENERATE $0, COUNT($1);
+STORE y INTO 'output';

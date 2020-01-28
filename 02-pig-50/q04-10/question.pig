@@ -27,3 +27,19 @@ fs -rm -f -r output;
 -- 
 --  >>> Escriba su respuesta a partir de este punto <<<
 -- 
+u = LOAD 'truck_event_text_partition.csv' USING PigStorage(',')
+    AS (driverId:INT,
+        truckId:INT,
+        eventTime:CHARARRAY,
+        eventType:CHARARRAY,
+        longitude:DOUBLE,
+        latitude:DOUBLE,
+        eventKey:CHARARRAY,
+        correlationId:CHARARRAY,
+        driverName:CHARARRAY,
+        routeId:INT,
+        routeName:CHARARRAY,
+        eventDate:CHARARRAY);
+x = LIMIT u 10;
+z = FOREACH x GENERATE CONCAT((CHARARRAY)$0,',',(CHARARRAY)$1,',',$2);
+STORE z INTO 'output';

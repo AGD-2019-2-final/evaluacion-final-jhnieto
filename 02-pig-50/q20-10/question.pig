@@ -28,3 +28,7 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+r = FOREACH u GENERATE firstname, color;
+x = FILTER r BY NOT STARTSWITH(color,'b');
+x = FOREACH x GENERATE CONCAT($0,',',(CHARARRAY)$1);
+STORE x INTO 'output';

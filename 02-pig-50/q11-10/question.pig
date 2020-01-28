@@ -38,3 +38,7 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+r = ORDER u BY surname;
+r = FOREACH r GENERATE $2, UPPER($2), LCFIRST($2);
+x = FOREACH r GENERATE CONCAT($0,',',(CHARARRAY)$1,',',(CHARARRAY)$2);
+STORE x INTO 'output';

@@ -40,3 +40,24 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+r = FOREACH u GENERATE birthday, ToDate(birthday,'yyyy-MM-dd') AS (date_time:DateTime);
+x = FOREACH r GENERATE date_time, birthday, ToString($1,'MMM'), ToString($1,'MM'), ToString($1,'M');
+x = FOREACH x GENERATE $1,
+    CASE ToString($0,'MM') 
+    WHEN '01' THEN 'ene' 
+    WHEN '02' THEN 'feb' 
+    WHEN '03' THEN 'mar' 
+    WHEN '04' THEN 'abr' 
+    WHEN '05' THEN 'may' 
+    WHEN '06' THEN 'jun' 
+    WHEN '07' THEN 'jul' 
+    WHEN '08' THEN 'ago' 
+    WHEN '09' THEN 'sep' 
+    WHEN '10' THEN 'oct' 
+    WHEN '11' THEN 'nov' 
+    WHEN '12' THEN 'dic' 
+    END,
+    ToString($0,'MM'),
+    ToString($0,'M');
+x = FOREACH x GENERATE CONCAT((CHARARRAY)$0,',',(CHARARRAY)$1,',',(CHARARRAY)$2,',',(CHARARRAY)$3);
+STORE x INTO 'output';
